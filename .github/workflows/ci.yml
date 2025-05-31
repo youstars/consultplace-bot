@@ -1,0 +1,5 @@
+TELEGRAM_BOT_TOKEN=changeme
+DATABASE_URL=postgresql+asyncpg://consult:consult@postgres:5432/consultplace
+REDIS_URL=redis://redis:6379/0
+AI_API_KEY=changeme
+SENTRY_DSN=

@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  bot:
+    build: .
+    env_file: .env
+    command: >
+      sh -c "alembic upgrade head &&
+             celery -A consultplace_bot.celery_app worker --loglevel=info & 
+             python -m consultplace_bot"
+    depends_on:
+      - postgres
+      - redis
+
+  celery-beat:
+    build: .
+    env_file: .env
+    command: celery -A consultplace_bot.celery_app beat --loglevel=info
+    depends_on:
+      - redis
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: consult
+      POSTGRES_PASSWORD: consult
+      POSTGRES_DB: consultplace
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports: ["5432:5432"]
+
+  redis:
+    image: redis:7
+    command: ["redis-server"]
+    ports: ["6379:6379"]
+
+volumes:
+  pgdata:
