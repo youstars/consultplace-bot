@@ -6,7 +6,7 @@ authors = [
     {name = "youstars",email = "youstars.tech@gmail.com"}
 ]
 readme = "README.md"
-requires-python = "^3.12"
+requires-python = ">=3.12"
 dependencies = [
     "aiogram (>=3.5,<4.0)",
     "sqlalchemy (>=2.0,<3.0)",
