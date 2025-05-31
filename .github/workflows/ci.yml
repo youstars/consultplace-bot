@@ -42,8 +42,14 @@ jobs:
       - name: Pytest
         run: poetry run pytest -q --cov=consultplace_bot
 
-      - name: Build & push image             # пушим только из main
-        if: github.ref == 'refs/heads/main'
+      - - name: Build & push image
+      - if: github.ref == 'refs/heads/main'
+      - uses: docker/build-push-action@v5
+      - with:
+      - context: .
+      - push: true
+      - tags: ghcr.io/${{ github.repository }}:${{ github.sha }}
+      - # кеш временно отключим
         uses: docker/build-push-action@v5
         with:
           context: .
