@@ -98,18 +98,25 @@ class BackendClient:
         return resp.json().get("id")
 
     async def request_tz(self, order_id: int, payload: dict) -> str:
-        r = await self._cli.post(f"/v1/ai/orders/{order_id}/tz", json=payload)
+        r = await self._cli.post(f"/v1/orders/{order_id}/tz", json=payload)
         r.raise_for_status()
         return r.json()["tz"]
 
     async def estimate_cost(self, order_id: int, tz: str) -> dict:
         r = await self._cli.post(
-            f"/v1/ai/orders/{order_id}/estimate", json={"tz": tz}
+            f"/v1/orders/{order_id}/estimate", json={"tz": tz}
         )
         r.raise_for_status()
         return r.json()  # {min_price, max_price, effort_hours, currency}
 
     # единый инстанс
+
+    async def list_orders(self, *, mine: bool = True) -> list[dict]:
+        """Вернуть список заказов текущего пользователя (или все, если mine=False)."""
+        params = {"mine": "1"} if mine else {}
+        r = await self._cli.get("/orders/", params=params)  # или /api/orders/
+        r.raise_for_status()
+        return r.json()  # [{id, title, status, ...}, …]
 
 
 backend = BackendClient()
