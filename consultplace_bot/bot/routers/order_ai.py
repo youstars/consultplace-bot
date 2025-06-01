@@ -10,6 +10,10 @@ async def ai_generate_tz(cb: CallbackQuery):
     order_id = int(cb.data.rsplit(":", 1)[-1])
 
     tz = await backend.request_tz(order_id, payload={})   # в MVP payload пустой
+    if tz.startswith("🚧"):
+        await cb.message.answer(tz)
+        await cb.answer()
+        return
     text = f"<b>Черновик ТЗ</b>\n\n{escape(tz)}\n\nВсё верно?"
 
     kb = InlineKeyboardMarkup(inline_keyboard=[[

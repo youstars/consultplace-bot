@@ -98,7 +98,14 @@ class BackendClient:
         return resp.json().get("id")
 
     async def request_tz(self, order_id: int, payload: dict) -> str:
-        r = await self._cli.post(f"/v1/orders/{order_id}/tz", json=payload)
+        # было:
+        # r = await self._cli.post(f"/v1/orders/{order_id}/tz", json=payload)
+
+        # стало:
+        r = await self._cli.post(f"/v1/ai/orders/{order_id}/tz", json=payload)
+        if r.status_code == 404:
+            # сервис пока не развёрнут – покажем заглушку
+            return "🚧 Генерация ТЗ недоступна (AI-сервис ещё не включён)."
         r.raise_for_status()
         return r.json()["tz"]
 
