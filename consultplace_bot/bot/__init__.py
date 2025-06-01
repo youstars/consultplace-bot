@@ -14,6 +14,7 @@ from consultplace_bot.bot.routers.registration import router as reg_router
 from consultplace_bot.bot.routers.new_order import router as order_router  # Day 2
 from consultplace_bot.bot.routers.order_ai import router as ai_router
 
+
 async def main() -> None:
     await backend.login()  # JWT перед запуском
 
