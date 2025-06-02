@@ -20,6 +20,7 @@ class Settings(BaseSettings):
         env_file=".env",        # из какого файла читать по-умолчанию
         extra="ignore",         # игнорировать лишние переменные
     )
+    database_url: str = "postgresql+asyncpg://user:pass@localhost/dbname"
 
 
 # единый инстанс, импортируем где нужно
