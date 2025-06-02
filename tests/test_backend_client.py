@@ -1,11 +1,12 @@
-import pytest, logging, respx
-import httpcore
-
-logging.basicConfig(level=logging.DEBUG)
-logging.getLogger("httpcore").setLevel(logging.DEBUG)
-
+import logging
+import pytest
+import respx
 from consultplace_bot.api.backend import BackendClient
 from consultplace_bot.config import settings
+
+logging.getLogger("aiohttp").setLevel(logging.DEBUG)
+logging.getLogger("httpcore").setLevel(logging.DEBUG)
+
 
 
 @pytest.mark.asyncio

@@ -1,12 +1,10 @@
 import pytest
-pytest.skip("e2e-тест временно отключён: библиотека aiogram_tests ≠ aiogram-3", allow_module_level=True)
-
-from aiogram_tests import TestBot, TestDispatcher
-from aiogram_tests.types.dataset import CALLBACK_QUERY
+# from aiogram_tests import TestBot, TestDispatcher
+# from aiogram_tests.types.dataset import CALLBACK_QUERY
 from consultplace_bot.bot.storage import storage
 from consultplace_bot.bot.routers.registration import router
-from consultplace_bot.coсnfig import settings
-from consultplace_bot.api.backend import backend
+
+pytest.skip("e2e-тест временно отключён: библиотека aiogram_tests ≠ aiogram-3", allow_module_level=True)
 
 @pytest.mark.asyncio
 async def test_registration_flow(respx_mock):

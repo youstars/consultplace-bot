@@ -34,6 +34,6 @@ async def ai_match(cb: CallbackQuery):
 @router.callback_query(F.data.startswith("order:match:choose:"))
 async def confirm_candidate(cb: CallbackQuery):
     parts = cb.data.split(":")
-    order_id, sp_id = int(parts[-2]), int(parts[-1])
+    sp_id = int(parts[-1])
     await cb.message.edit_text(f"✅ Специалист {sp_id} приглашён! Ожидайте отклик.")
     await cb.answer()

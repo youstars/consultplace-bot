@@ -1,10 +1,9 @@
 import pytest
-pytest.skip("e2e test requires aiogram_tests (aiogram v2). Skipped for aiogram 3.", allow_module_level=True)
-
-from aiogram_tests import TestBot, TestDispatcher
+# from aiogram_tests import TestBot, TestDispatcher
 from consultplace_bot.bot.storage import storage
 from consultplace_bot.bot.routers.new_order import router
-from consultplace_bot.config import settings
+
+pytest.skip("e2e test requires aiogram_tests (aiogram v2). Skipped for aiogram 3.", allow_module_level=True)
 
 @pytest.mark.asyncio
 async def test_new_order_flow(respx_mock):

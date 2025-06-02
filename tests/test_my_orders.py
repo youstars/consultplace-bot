@@ -1,4 +1,4 @@
-import pytest, respx
+import pytest
 from consultplace_bot.api.backend import BackendClient
 
 @pytest.mark.asyncio
