@@ -65,6 +65,16 @@ class BackendClient:
         resp.raise_for_status()
         self._set_tokens(_TokenPair.model_validate(resp.json()))
 
+    async def match_specialists(self, order_id: int, top_n: int = 3) -> list[dict]:
+        r = await self._cli.post(
+            f"/v1/orders/{order_id}/match", json={"tz": "", "top_n": top_n}
+        )
+        if r.status_code == 404:
+            # AI-match ещё не развёрнут
+            return []
+        r.raise_for_status()
+        return r.json()["specialists"]  # [{id, overall_rating, approx_hourly_rate, ...}, …]
+
     async def refresh(self) -> None:
         resp = await self._cli.post(
             self.REFRESH_URL,

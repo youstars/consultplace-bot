@@ -14,6 +14,8 @@ from consultplace_bot.bot.routers.registration import router as reg_router
 from consultplace_bot.bot.routers.new_order import router as order_router  # Day 2
 from consultplace_bot.bot.routers.order_ai import router as ai_router
 from consultplace_bot.bot.routers.orders_list import router as list_router
+from consultplace_bot.bot.routers.match_ai import router as match_router
+
 
 
 async def main() -> None:
@@ -25,6 +27,7 @@ async def main() -> None:
     dp.include_router(order_router)
     dp.include_router(ai_router)
     dp.include_router(list_router)
+    dp.include_router(match_router)
 
     await dp.start_polling(bot)
 
