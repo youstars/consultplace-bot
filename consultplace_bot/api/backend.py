@@ -1,4 +1,5 @@
-import time, asyncio, httpx
+import time
+import httpx
 from pydantic import BaseModel
 from consultplace_bot.config import settings
 
@@ -82,7 +83,7 @@ class BackendClient:
             auth=None,  # ← то же здесь
         )
         if resp.status_code == 401:
-            await self.login();
+            await self.login()
             return
         resp.raise_for_status()
         self._set_tokens(
