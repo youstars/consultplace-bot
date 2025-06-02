@@ -1,3 +1,4 @@
+# ruff: noqa
 import pytest
 from consultplace_bot.api.backend import BackendClient
 

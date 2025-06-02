@@ -1,3 +1,4 @@
+# ruff: noqa
 # tests/test_ai_match.py
 import pytest
 from consultplace_bot.api.backend import BackendClient

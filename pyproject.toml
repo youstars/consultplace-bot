@@ -43,12 +43,12 @@ aiogram-tests = "^1.0.3"
 backend = "^0.2.4.1"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "*"
+pytest = "^7.0"
 pytest-asyncio = "*"
 pytest-cov = "*"
 ruff = "*"
 mypy = "*"
-respx = "^0.22.0"
+respx = "^0.20"
 
 [build-system]
 requires = ["poetry-core>=1.5.0"]

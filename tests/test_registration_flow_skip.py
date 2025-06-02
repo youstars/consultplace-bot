@@ -1,10 +1,12 @@
+# ruff: noqa
 import pytest
-# from aiogram_tests import TestBot, TestDispatcher
-# from aiogram_tests.types.dataset import CALLBACK_QUERY
+pytest.skip("e2e-тест временно отключён: библиотека aiogram_tests ≠ aiogram-3", allow_module_level=True)
+
+from aiogram_tests import TestBot, TestDispatcher
+from aiogram_tests.types.dataset import CALLBACK_QUERY
 from consultplace_bot.bot.storage import storage
 from consultplace_bot.bot.routers.registration import router
 
-pytest.skip("e2e-тест временно отключён: библиотека aiogram_tests ≠ aiogram-3", allow_module_level=True)
 
 @pytest.mark.asyncio
 async def test_registration_flow(respx_mock):

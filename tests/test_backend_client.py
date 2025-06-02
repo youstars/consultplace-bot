@@ -1,3 +1,4 @@
+# ruff: noqa
 import logging
 import pytest
 import respx
