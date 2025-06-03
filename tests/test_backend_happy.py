@@ -1,9 +1,9 @@
 import pytest
 import respx
-import httpx
+
 
 from consultplace_bot.api.backend import BackendClient
-from consultplace_bot.config import settings
+
 
 
 @pytest.mark.asyncio
