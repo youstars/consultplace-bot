@@ -3,25 +3,16 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    """Глобальные переменные окружения для Telegram-бота."""
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    # === Telegram ===
-    telegram_token: str
+    telegram_token:   str
+    backend_base_url: str
+    backend_user:     str
+    backend_password: str
 
-    # === CRM-backend ===
-    backend_base_url: str       # например: https://crm.consultplace.pro
-    backend_user: str           # service-account login
-    backend_password: str       # service-account password
-
-    # === Redis ===
-    redis_url: str = "redis://redis:6379/0"
-
-    model_config = SettingsConfigDict(
-        env_file=".env",        # из какого файла читать по-умолчанию
-        extra="ignore",         # игнорировать лишние переменные
-    )
-    database_url: str = "postgresql+asyncpg://user:pass@localhost/dbname"
+    database_url: str = "sqlite+aiosqlite:///./test.db"
+    redis_url:    str = "redis://localhost:6379/0"
 
 
-# единый инстанс, импортируем где нужно
-settings = Settings()
+# ----------------------------------------------------------------------
+settings = Settings()            #  ← вернуть эту строку

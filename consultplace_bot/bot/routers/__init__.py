@@ -10,6 +10,19 @@ from consultplace_bot.api.backend import backend
 from consultplace_bot.bot.routers.registration import router as reg_router
 from consultplace_bot.bot.routers.new_order import router as order_router
 from consultplace_bot.bot.routers.order_ai import router as ai_router
+from consultplace_bot.bot.routers.orders_list   import router as list_router # <-- добавили  ✅  noqa: F401
+
+from . import registration     # noqa: F401
+from . import new_order        # noqa: F401
+from . import order_ai         # noqa: F401
+from . import orders_list      # ← главное!  # noqa: F401
+
+__all__ = [
+    "registration",
+    "new_order",
+    "order_ai",
+    "orders_list",   # чтобы   from … import orders_list   работало
+]
 
 async def main() -> None:
     # Сначала логинимся в CRM, чтобы получить JWT для всех запросов
@@ -23,6 +36,7 @@ async def main() -> None:
     dp.include_router(reg_router)
     dp.include_router(order_router)
     dp.include_router(ai_router)
+    dp.include_router(list_router)
 
     # Запускаем polling
     await dp.start_polling(bot)

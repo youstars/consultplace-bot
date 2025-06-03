@@ -22,9 +22,7 @@ def _render_table(orders: list) -> str:
 @router.message(Command("my_orders"))
 async def my_orders(msg: Message):
     response = await backend.list_orders()
-    print(f"Type of response: {type(response)}, Content: {response}")
     # Извлекаем список заказов из ключа 'results'
     orders = response.get('results', []) if isinstance(response, dict) else response
-    if orders:
-        print(f"Type of first order: {type(orders[0])}, First order: {orders[0]}")
+
     await msg.answer(_render_table(orders), parse_mode="HTML")

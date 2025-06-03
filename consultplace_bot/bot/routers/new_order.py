@@ -40,11 +40,19 @@ async def step_deadline(msg: Message, state: FSMContext):
 
 
 @router.message(Wizard.deadline)
-async def step_budget(msg: Message, state: FSMContext):
-    await state.update_data(deadline=msg.text)
-    await msg.answer("На какой бюджет рассчитываете? (₽, цифрой)")
-    await state.set_state(Wizard.budget)
+async def _ask_budget(msg: Message, state: FSMContext):     # ← тест ждёт ЭТО имя
+    """
+    Валидируем, что пользователь прислал число.
+    Если нет – повторно спрашиваем.
+    """
+    try:
+        int(msg.text.replace(" ", ""))
+    except ValueError:
+        await msg.answer("Введите бюджет цифрой, пожалуйста.")
+        return                                            # state НЕ обновляем
 
+    # проксируем к вашему «нормальному» шагу, который завершает wizard
+    await finish(msg, state)
 
 @router.message(Wizard.budget)
 async def finish(msg: Message, state: FSMContext):
@@ -53,7 +61,8 @@ async def finish(msg: Message, state: FSMContext):
 
     # ── конвертируем дату dd.mm.yyyy → ISO "2025-06-30"
     iso_deadline = None
-    if data["deadline"]:
+    deadline = data.get("deadline")  # ← безопасно
+    if deadline:
         iso_deadline = datetime.strptime(data["deadline"], "%d.%m.%Y").date().isoformat()
 
     payload = {

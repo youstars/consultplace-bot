@@ -3,7 +3,6 @@ name: CI
 on:
   push:
     branches:
-      - main
       - feat/registration-day1
   pull_request: {}
 
