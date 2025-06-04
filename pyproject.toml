@@ -50,6 +50,7 @@ pytest-cov = "*"
 ruff = "*"
 mypy = "*"
 respx = "^0.20"
+pylint = "^3.3.7"
 
 [build-system]
 requires = ["poetry-core>=1.5.0"]
