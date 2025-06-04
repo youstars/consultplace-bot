@@ -3,13 +3,17 @@ name: CI
 on:
   push:
     branches:
-      - main
-      - develop
+      - feat/registration-day1
   pull_request: {}
 
 jobs:
   build-test:
     runs-on: ubuntu-latest
+    env:
+      TELEGRAM_TOKEN: "mock-token"
+      BACKEND_BASE_URL: "http://testserver"
+      BACKEND_USER: "test"
+      BACKEND_PASSWORD: "test"
     permissions:
       contents: read
       packages: write          # для ghcr
