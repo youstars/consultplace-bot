@@ -37,19 +37,23 @@ async def main() -> None:
     from consultplace_bot.bot.storage import storage
     from consultplace_bot.config import settings
 
+    # Роутеры внутри подпакета .routers:
+    from consultplace_bot.bot.routers.registration import router as registration_router
+    from consultplace_bot.bot.routers.new_order import router as new_order_router
+    from consultplace_bot.bot.routers.order_ai import router as order_ai_router
+    from consultplace_bot.bot.routers.orders_list import router as orders_list_router
+
+    # Получаем JWT для запросов к backend-CRM
     await backend.login()
 
-    # сами роутеры берём из подпакета, который уже импортировали выше
+    # Создаём Dispatcher и регистрируем роутеры
     dp = Dispatcher(storage=storage)
-    dp.include_router(routers.registration.router)
-    dp.include_router(routers.new_order.router)
-    dp.include_router(routers.order_ai.router)
-    dp.include_router(routers.orders_list.router)
+    dp.include_router(registration_router)
+    dp.include_router(new_order_router)
+    dp.include_router(order_ai_router)
+    dp.include_router(orders_list_router)
 
-    # получаем JWT для запросов к backend-CRM
-
-
-    # запускаем polling
+    # Запускаем polling
     bot = Bot(settings.telegram_token, parse_mode="HTML")
     await dp.start_polling(bot)
 

@@ -41,6 +41,7 @@ pydantic-settings = "~2.2"
 sentry-sdk = "~1.45"
 aiogram-tests = "^1.0.3"
 backend = "^0.2.4.1"
+python-dotenv = "^1.1.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.0"

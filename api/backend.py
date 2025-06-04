@@ -5,10 +5,11 @@ HTTP-клиент для работы с backend-CRM.
 """
 
 from __future__ import annotations
-
+import os
 import sys
 import time
 from typing import Optional
+from openai import AsyncOpenAI
 
 import httpx
 from pydantic import BaseModel
@@ -48,6 +49,37 @@ class _JWTAuth(httpx.Auth):
 class BackendClient:
     LOGIN_URL = "/auth/token/create/"
     REFRESH_URL = "/auth/token/refresh/"
+
+    async def ai_generate_tz(self, order: dict) -> str:
+        """
+        Генерирует ТЗ через OpenAI.
+        `order` — словарь с полями goal, budget, deadline, comments.
+        """
+        client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+        system_prompt = (
+            "Ты опытный продакт-менеджер. На основе краткого описания "
+            "сформируй техническое задание в 4-6 разделах: цель, функционал, "
+            "ролей пользователей, критерии приёмки, ограничения."
+        )
+        user_prompt = (
+            f"Проект: {order['goal']}\n"
+            f"Бюджет: {order.get('budget', 'не указан')} руб\n"
+            f"Срок: {order.get('deadline', 'не указан')}\n"
+            f"Комментарий клиента: {order.get('comment')}"
+        )
+
+        response = await client.chat.completions.create(
+            model="gpt-4o-mini",          # дёшево и быстро
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            max_tokens=700,
+            temperature=0.3,
+        )
+        tz = response.choices[0].message.content.strip()
+        return tz
 
     # ------------- construction ------------------------------------------------
     def __init__(self) -> None:
@@ -94,8 +126,7 @@ class BackendClient:
             json={
                 "username": settings.backend_user,
                 "password": settings.backend_password,
-            },
-            auth=None,        # <-- лишний auth не нужен на самом login-запросе
+            }        # <-- лишний auth не нужен на самом login-запросе
         )
         resp.raise_for_status()
         self._set_tokens(_TokenPair.model_validate(resp.json()))
@@ -105,8 +136,7 @@ class BackendClient:
         resp = await self._get_cli().post(
             self.REFRESH_URL,
             json={"refresh": self._refresh},
-            auth=None,
-        )
+            )
         if resp.status_code == 401:          # refresh истёк
             await self.login()
             return

@@ -4,8 +4,10 @@ import time
 from typing import Optional
 
 import httpx
+import os
 import respx  # нужен только в _patch_login_for_tests
 from pydantic import BaseModel
+from openai import AsyncOpenAI
 
 from consultplace_bot.config import settings
 
@@ -47,6 +49,37 @@ class BackendClient:
 
     LOGIN_URL = "/auth/token/create/"
     REFRESH_URL = "/auth/token/refresh/"
+
+    async def ai_generate_tz(self, order: dict) -> str:
+        """
+        Генерирует ТЗ через OpenAI.
+        `order` — словарь с полями goal, budget, deadline, comments.
+        """
+        client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+        system_prompt = (
+            "Ты опытный продакт-менеджер. На основе краткого описания "
+            "сформируй техническое задание в 4-6 разделах: цель, функционал, "
+            "ролей пользователей, критерии приёмки, ограничения."
+        )
+        user_prompt = (
+            f"Проект: {order['order_goal']}\n"
+            f"Бюджет: {order.get('budget', 'не указан')} руб\n"
+            f"Срок: {order.get('deadline', 'не указан')}\n"
+            f"Комментарий клиента: {order.get('comment')}"
+        )
+
+        response = await client.chat.completions.create(
+            model="gpt-4o-mini",          # дёшево и быстро
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            max_tokens=700,
+            temperature=0.3,
+        )
+        tz = response.choices[0].message.content.strip()
+        return tz
 
     # --------------------------------------------------------------------- ctor
     def __init__(self) -> None:
